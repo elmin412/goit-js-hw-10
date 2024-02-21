@@ -49,12 +49,17 @@ console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
+buttonStart.disabled = true;
 let userSelectedDate;
+
+function flatPickrOption(selectedDate) {
+  
+}
 
 datetimePicker.addEventListener("change", () => {
   const selectedDate = new Date(datetimePicker.value);
   const currentDate = new Date();
-
+  
   if (selectedDate <= currentDate) {
     iziToast.error({
       title: "Error",
@@ -74,22 +79,15 @@ buttonStart.addEventListener("click", () => {
     const currentDate = new Date().getTime();
     const remainingTime = targetDate - currentDate;
 
+    userSelectedDate.disabled = true; // блокировка для инпута
+    
     if (remainingTime > 0) {
-      buttonStart.disabled = true;
+      (buttonStart).disabled = true;
       const { days, hours, minutes, seconds } = convertMs(remainingTime);
-      document.querySelector("[data-days]").textContent = String(days).padStart(
-        2,
-        "0",
-      );
-      document.querySelector("[data-hours]").textContent = String(
-        hours,
-      ).padStart(2, "0");
-      document.querySelector("[data-minutes]").textContent = String(
-        minutes,
-      ).padStart(2, "0");
-      document.querySelector("[data-seconds]").textContent = String(
-        seconds,
-      ).padStart(2, "0");
+      document.querySelector("[data-days]").textContent = String(days).padStart(2,"0",);
+      document.querySelector("[data-hours]").textContent = String(hours).padStart(2, "0");
+      document.querySelector("[data-minutes]").textContent = String(minutes).padStart(2, "0");
+      document.querySelector("[data-seconds]").textContent = String(seconds).padStart(2, "0");
     } else {
       clearInterval(timerInterval);
     }
