@@ -13,6 +13,7 @@ console.log(iziToast);
 
 const datetimePicker = document.getElementById("datetime-picker");
 const buttonStart = document.querySelector("[data-start]");
+const inputTime = document.querySelector('input')
 
 const options = {
   enableTime: true,
@@ -24,7 +25,22 @@ const options = {
   },
 };
 
-flatpickr("input#datetime-picker", options);
+const flatpickrOptions = {
+  onClose: (selectedDates) => {
+    const selectedDate = new Date(selectedDates[0]);
+    const currentDate = new Date();
+  
+    if (selectedDate <= currentDate) {
+      window.alert("Please choose a date in the future");
+      buttonStart.disabled = true;
+    } else {
+      buttonStart.disabled = false;
+      userSelectedDate = selectedDate;
+    }
+  }
+};
+
+flatpickr("input#datetime-picker", options, flatpickrOptions);
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -49,18 +65,13 @@ console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
-buttonStart.disabled = true;
 let userSelectedDate;
-
-function flatPickrOption(selectedDate) {
-  
-}
+buttonStart.disabled = true;
 
 datetimePicker.addEventListener("change", () => {
   const selectedDate = new Date(datetimePicker.value);
   const currentDate = new Date();
-  
-  if (selectedDate <= currentDate) {
+      if (selectedDate <= currentDate) {
     iziToast.error({
       title: "Error",
       message: "Please choose a date in the future",
@@ -78,11 +89,10 @@ buttonStart.addEventListener("click", () => {
   const timerInterval = setInterval(() => {
     const currentDate = new Date().getTime();
     const remainingTime = targetDate - currentDate;
-
-    userSelectedDate.disabled = true; // блокировка для инпута
     
     if (remainingTime > 0) {
       (buttonStart).disabled = true;
+      inputTime.disabled = true;
       const { days, hours, minutes, seconds } = convertMs(remainingTime);
       document.querySelector("[data-days]").textContent = String(days).padStart(2,"0",);
       document.querySelector("[data-hours]").textContent = String(hours).padStart(2, "0");
